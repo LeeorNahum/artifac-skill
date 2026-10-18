@@ -51,7 +51,7 @@
       unavailable: "Open this page on Artifac to see the shared list."
     };
     const explain = (error) => say(MESSAGES[error?.code] ?? "Couldn't save. Try again.");
-    // A failed read is not a failed save, and it stays on screen until the list loads.
+    // A failed read is not a failed save. Its message stays until records arrive.
     let loadError = false;
     const failedToLoad = (error) => {
       loadError = true;
@@ -111,7 +111,8 @@
           row.append(box, label, remove);
           return row;
         }));
-        if (!loadError) say(records.length === 0 ? "Nothing here yet." : "");
+        if (!loadError || records.length > 0) say(records.length === 0 ? "Nothing here yet." : "");
+        if (records.length > 0) loadError = false;
       };
 
       // Called now and again after every change by anyone. No polling.
