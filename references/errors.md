@@ -8,7 +8,7 @@ Every refusal carries `code`, `message`, `hint`, and sometimes `details`. A fail
 | `forbidden` | The person's role does not allow this here, such as a Viewer changing code. Say which role it needs. Sharing, visibility, subdomains, and Trash are managed in the Artifac app, never through a tool |
 | `not_found` | The ID or path does not exist, or the person cannot see it. List workspaces or artifacts, or read the manifest, for current IDs and paths. Do not guess IDs |
 | `validation_failed` | An argument or file is malformed. `details.issues` names each field and rule. Fix those and send again |
-| `invalid_path` | Rename the path to a relative, normalized one. `details.reason` names the rule |
+| `invalid_path` | Rename the path to a relative, normalized one. the message and `details.rule` name the rule it broke |
 | `reserved_path` | Under `.artifac/` only `config.json` and `data/<collection>.json` exist, and `__artifac/` is Artifac's. Move the file elsewhere |
 | `entry_point_required` | A new artifact needs `index.html` at its root, and `index.html` cannot be deleted. Send new content for it instead |
 | `edit_match_not_found` | The text is not in the current file, often because it changed. Read the file again and copy `old_string` exactly from it |
