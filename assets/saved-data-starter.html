@@ -51,6 +51,12 @@
       unavailable: "Open this page on Artifac to see the shared list."
     };
     const explain = (error) => say(MESSAGES[error?.code] ?? "Couldn't save. Try again.");
+    // A failed read is not a failed save, and it stays on screen until the list loads.
+    let loadError = false;
+    const failedToLoad = (error) => {
+      loadError = true;
+      say(MESSAGES[error?.code] ?? "Couldn't load the list. Reload to try again.");
+    };
 
     let sdk = null;
     try {
@@ -72,7 +78,7 @@
         canCreate = rights ? rights.create : me.can_write;
         canChange = (record) => (rights ? rights.change === "all" || (rights.change === "own" && record.mine) : me.can_write);
       } catch (error) {
-        explain(error);
+        failedToLoad(error);
       }
       form.hidden = !canCreate;
 
@@ -105,11 +111,11 @@
           row.append(box, label, remove);
           return row;
         }));
-        say(records.length === 0 ? "Nothing here yet." : "");
+        if (!loadError) say(records.length === 0 ? "Nothing here yet." : "");
       };
 
       // Called now and again after every change by anyone. No polling.
-      items.subscribe(render, { onError: explain });
+      items.subscribe(render, { onError: failedToLoad });
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();

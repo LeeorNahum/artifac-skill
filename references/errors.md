@@ -13,7 +13,7 @@ Every refusal carries `code`, `message`, `hint`, and sometimes `details`. A fail
 | `entry_point_required` | A new artifact needs `index.html` at its root, and `index.html` cannot be deleted. Send new content for it instead |
 | `edit_match_not_found` | The text is not in the current file, often because it changed. Read the file again and copy `old_string` exactly from it |
 | `edit_match_ambiguous` | The text appears more than once. Add surrounding lines until it is unique |
-| `edit_unsupported` | Exact edits apply to UTF-8 text files up to the edit size limit in `read_artifact`'s `limits`. Replace a larger or binary file whole, reading every page of it first, or through a transfer route |
+| `edit_unsupported` | Exact edits apply to UTF-8 text files up to the edit size limit in `read_artifact`'s `limits`. Replace it whole with `update_artifact` after reading it (every page, for text), sending a binary or oversized file through a transfer route |
 | `read_required` | Read the file (every page, for a long one), then send the replacement, or make an exact edit instead |
 | `conflict` | Someone changed the file, record, or collection after your read. Read it again and reapply your change to what is there now. Never resend the stale version |
 | `quota_exceeded` | An allowance is full, named in `details`. Tell the person. Remove files or saved data only with their agreement. Trash frees the active-artifact slot, but its bytes count until it is permanently deleted in the app. A paid plan raises allowances |

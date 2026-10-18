@@ -15,7 +15,7 @@
 
 The [Artifac plugin](https://github.com/LeeorNahum/Artifac-Plugin) installs this skill together with the Artifac MCP server for Claude Code, Codex, and ChatGPT.
 
-To add only the skill, copy this folder into your agent's skills directory as `artifac`, or add it to a repository as a submodule:
+To add only the skill, copy `SKILL.md`, `LICENSE`, `references/`, and `assets/` into a folder named `artifac` in your agent's skills directory, or add this repository to another as a submodule:
 
 ```bash
 git submodule add https://github.com/LeeorNahum/artifac-skill.git .agents/skills/artifac

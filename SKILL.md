@@ -96,11 +96,11 @@ The artifact runs in a sandboxed frame on an origin of its own:
 
 ## Viewer Identity
 
-Artifact code never receives a person's account ID, name, or email. A signed-in viewer appears to an artifact under a pseudonym that is different in every artifact for the same person, and an anonymous visitor under a key derived from their browser and that artifact. That pseudonym is what owns the records they create there.
+Artifact code never receives a person's account ID, name, or email. A signed-in viewer appears to an artifact under a pseudonym that is different in every artifact for the same person, and an anonymous visitor under a key derived from their browser and that artifact. Whichever applies owns the records they create there.
 
 - Learn about the viewer through the SDK: `session()` says whether they are signed in, their role, and what they may do in each configured collection, and each record's `mine` flag says whether they created it. The data file shows the same `mine` flag, never an owner value.
 - Never build identity that spans artifacts, and never treat an anonymous visitor's ownership as proof of who they are.
-- The runtime token the SDK holds is the SDK's own, so read the viewer through `session()` and `mine` rather than decoding it.
+- Never decode the runtime token the SDK holds. Its contents are the SDK's own.
 
 ## Errors
 
