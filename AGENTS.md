@@ -12,6 +12,7 @@ Rules for editing the **artifac** skill. User-facing guidance lives in `SKILL.md
 | `references/http-and-cli.md` | The CLI's commands and the HTTP API's routes, uploads, receipts, and errors |
 | `assets/saved-data-starter.html` | A copyable one-file page using the SDK the way the references teach |
 | `README.md` | Short human summary |
+| `LICENSE` | Apache License 2.0, the same as the plugin that bundles the skill |
 
 ## Source of truth
 
@@ -23,6 +24,8 @@ The skill teaches Artifac's public contract as built, never plans. The product i
 - Policies, configuration rules, and record shapes: `packages/domain/src/saved-data.ts` and `packages/domain/src/path-access.ts`
 - Entry metadata: `packages/domain/src/metadata.ts`
 - Runtime SDK and the frame it runs in: `packages/runtime/src/sdk.ts`, `packages/runtime/src/frame.ts`, and `apps/edge/src/headers.ts`
+- Viewer identity: `packages/backend/convex/model/pseudonyms.ts` and `model/runtimeTokens.ts`
+- Link preview card: `apps/edge/src/shell.ts` and the site's `/{uid}/__artifac/card.png` route
 - Receipts and replacement: `packages/backend/convex/model/receipts.ts`, `model/changes.ts`, and `model/data.ts`
 - Transfer: `packages/gateway/src/transfer.ts`, `apps/api/src/contract.ts`, and `apps/cli/src/cli.ts`
 
@@ -35,11 +38,7 @@ The skill teaches Artifac's public contract as built, never plans. The product i
 - No em dashes, and no semicolons joining what should be separate sentences.
 - Capitalized bullets and parallel list voice.
 - Bump `metadata.version` by the release-versioning skill's rules for skills.
-- Run the skill sync before committing.
-
-## Open checks
-
-- **Viewer identity.** `SKILL.md` and `references/saved-data.md` state that artifact code sees a signed-in viewer only as a pseudonym of that artifact. Artifac-Web's `dev` still puts the person's account-wide public ID in the runtime token's `sub`, and the change that makes it a per-artifact pseudonym waits on an unmerged branch. Recheck `packages/backend/convex/model/runtimeTokens.ts` once it merges, then delete this entry.
+- Before committing, bring the installed skills current with `git submodule update --remote -- .agents/skills`, and when one changes, regenerate `CLAUDE.md` with `npx --yes github:LeeorNahum/claude-code-compat-skill`.
 
 ## Before finishing
 
