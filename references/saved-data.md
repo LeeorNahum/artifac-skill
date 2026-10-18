@@ -105,11 +105,12 @@ try {
 Records have the same shape as in the data file.
 
 - Toggle or set single fields with `merge`, so two visitors changing different fields of one record never overwrite each other.
-- For a read, compute, and write sequence, pass `{ expectedRevision: record.revision }` to `update` or `remove`. It fails with `conflict` when the record changed since.
+- For a read, compute, and write sequence, pass `{ expectedRevision: record.revision }` as the last argument: `update(id, change, { expectedRevision })` or `remove(id, { expectedRevision })`. It fails with `conflict` when the record changed since. Inside the change object it is ignored.
 - `session().collections` lists only the collections the configuration names. Name every collection whose permissions the page checks.
-- Every failure is an `ArtifacError` with `code`, `message`, `hint`, and `details`. `unavailable` means the page is not open inside Artifac, and preview snapshots refuse writes, so show the page without the data instead of breaking.
+- Every failure is an `ArtifacError` with `code`, `message`, `hint`, and `details`. `unavailable` means the page is not open inside Artifac, so show the page without the data instead of breaking. The `hint` is written for the page's author, so show visitors your own words, chosen by `code`.
+- A write that fails leaves nothing changed, so put the control back the way it was, as the starter does.
 - Subscriptions update live, so never poll. A code change reloads the page, and saved records survive it.
 
 ## Visitors And Ownership
 
-An anonymous visitor owns records through a key tied to their browser for that artifact. Clearing site data, or switching browsers, loses access to their `own` records, and the key proves possession of that browser, not who the person is. Signing in ties records to the person's account, seen by the artifact only as a pseudonym of its own. Never use an `own` policy as authentication for anything beyond the visitor's own records.
+An anonymous visitor owns records through a key tied to their browser for that artifact. Clearing site data, or switching browsers, loses access to their `own` records, and the key proves possession of that browser, not who the person is. Signing in ties records to the person, who appears to each artifact under a pseudonym of that artifact alone. Never use an `own` policy as authentication for anything beyond the visitor's own records.

@@ -10,7 +10,7 @@ Both act for one signed-in person with the same rules and error codes as the MCP
 | --- | --- |
 | `workspaces` | Lists workspaces, marking where you can create |
 | `list [--workspace <id>] [--shared] [--query <text>] [--sort <order>]` | Lists artifacts |
-| `read <id> [path] [--offset n] [--limit n] [--out <file>]` | Reads details and the manifest, or one file. `--out` saves the whole file, whatever its size or type |
+| `read <id> [path] [--offset n] [--limit n] [--out <file>]` | Reads details and the manifest, or one file. `--out` saves the whole file, whatever its size or type, ending a text file with a newline |
 | `create --workspace <id> <file or folder>...` | Creates an artifact. `index.html` must be at the top |
 | `update <id> <file or folder>... [--overwrite]` | Adds or replaces files |
 | `edit <id> <path> --old <text> --new <text>` | One exact replacement |

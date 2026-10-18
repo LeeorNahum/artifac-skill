@@ -1,6 +1,7 @@
 ---
 name: "artifac"
 description: "Use when building, publishing, updating, or fixing an interactive web page, app, game, dashboard, or static site on Artifac (artif.ac), and whenever a task calls Artifac's MCP tools such as create_artifact or update_artifact, its HTTP API, or the `npx artifac` CLI. Also use when an Artifac page needs saved data that visitors share or keep as their own, a title, favicon, or link preview, or images and other files sent to it, and when the user asks to host an HTML page at a link while Artifac is connected, even without naming Artifac. Teaches how to create and change artifacts without losing anyone's work, store saved data, choose how to transfer each file, and recover from each error."
+license: "Apache-2.0"
 metadata:
   author: "Leeor Nahum"
   version: "1.0.0"
@@ -71,7 +72,7 @@ Library cards and link previews take their metadata from the head of `index.html
 - `<title>` names the artifact, else `og:title`.
 - `<meta name="description">`, else `og:description`.
 - `<link rel="icon" href="...">` with a path inside the artifact or an `https://` URL. A `data:` URL is ignored.
-- `og:image` or `twitter:image` for the preview image. Without one, Artifac generates a snapshot of the page.
+- `og:image` or `twitter:image` for the preview image, a path inside the artifact or an `https://` URL. Without one, link previews of a public or unlisted artifact show a card Artifac draws from the title and description.
 
 Put these tags at the top of the head. Only `index.html` is read for them.
 
@@ -89,13 +90,17 @@ The artifact runs in a sandboxed frame on an origin of its own:
 
 - It cannot navigate the top-level page, so links that leave the artifact need `target="_blank"`.
 - Camera, microphone, and location are unavailable, and service workers are refused.
-- `localStorage` and IndexedDB belong to this artifact in this browser only. Use saved data for anything another visitor or device should see. Cookies may be visible to other artifacts, so keep nothing private in them.
+- `localStorage` and IndexedDB belong to this artifact in this browser only. Use saved data for anything another visitor or device should see. Cookies can be visible to other artifacts, so keep nothing private in them.
 - A frame the page nests gets no SDK.
-- Outside an Artifac page, the SDK fails to load (opened from disk) or throws `unavailable`, and preview snapshots render with no permission to write. Load the SDK with a dynamic `import()` and make the page render without saved data.
+- Outside an Artifac page the SDK fails to load (opened from disk) or throws `unavailable`. Load it with a dynamic `import()` and make the page render without saved data.
 
 ## Viewer Identity
 
-Artifact code learns about its viewer only through the SDK's `session()`, which says whether they are signed in, their role, and what they may do in each configured collection, and through each record's `mine` flag. Artifac never gives artifact code a person's account ID, name, or email. A signed-in viewer is known to each artifact by a pseudonym belonging to that artifact alone, and an anonymous visitor by a key tied to their browser for that artifact. So never build identity that spans artifacts, never treat an anonymous visitor's ownership as proof of who they are, and never decode the token the SDK holds: it is internal.
+Artifact code never receives a person's account ID, name, or email. A signed-in viewer appears to an artifact under a pseudonym that is different in every artifact for the same person, and an anonymous visitor under a key derived from their browser and that artifact. That pseudonym is what owns the records they create there.
+
+- Learn about the viewer through the SDK: `session()` says whether they are signed in, their role, and what they may do in each configured collection, and each record's `mine` flag says whether they created it. The data file shows the same `mine` flag, never an owner value.
+- Never build identity that spans artifacts, and never treat an anonymous visitor's ownership as proof of who they are.
+- The runtime token the SDK holds is the SDK's own, so read the viewer through `session()` and `mine` rather than decoding it.
 
 ## Errors
 
