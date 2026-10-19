@@ -13,7 +13,7 @@
 
 ## Install
 
-The [Artifac plugin](https://github.com/LeeorNahum/Artifac-Plugin) installs this skill together with the Artifac MCP server for Claude Code, Codex, and ChatGPT.
+The [Artifac plugin](https://github.com/LeeorNahum/Artifac-Plugin) installs this skill together with the Artifac MCP server, from Git, in Claude Code, the Claude app (claude.ai, the desktop app, and Cowork), Codex (the CLI and the ChatGPT desktop app's Codex), Cursor, and VS Code with Copilot agent plugins. ChatGPT on the web connects to the MCP server at `https://mcp.artif.ac/mcp` instead.
 
 To add only the skill, copy `SKILL.md`, `LICENSE`, `references/`, and `assets/` into a folder named `artifac` in your agent's skills directory, or add this repository to another as a submodule:
 
