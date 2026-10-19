@@ -29,6 +29,6 @@ Every refusal carries `code`, `message`, `hint`, and sometimes `details`. A fail
 | `upload_invalid` | The upload is unknown, incomplete, used, expired, or for another target. Make a new upload for this artifact or workspace and use it once |
 | `internal` | Retry once. After a failed `create_artifact`, list the workspace's artifacts first, because the artifact may exist |
 
-The remaining codes (`invitation_invalid`, `account_closed`, `name_invalid`, `name_unavailable`, and `trash_restore_blocked`) come from the Artifac app's own sharing, address, and Trash screens. Pass their hint on to the person.
+The remaining codes (`invitation_invalid`, `account_closed`, `name_invalid`, `name_unavailable`, and `trash_restore_blocked`) come from the Artifac app's own sharing, subdomain, and Trash screens. Pass their hint on to the person.
 
 Runtime SDK calls raise the same codes as an `ArtifacError`, plus `unavailable` when the page is not open inside Artifac.

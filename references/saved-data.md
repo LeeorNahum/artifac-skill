@@ -113,4 +113,4 @@ Records have the same shape as in the data file.
 
 ## Visitors And Ownership
 
-An anonymous visitor owns records through a key tied to their browser for that artifact. Clearing site data, or switching browsers, loses access to their `own` records, and the key proves possession of that browser, not who the person is. Signing in ties records to the person, who appears to each artifact under a pseudonym of that artifact alone. Never use an `own` policy as authentication for anything beyond the visitor's own records.
+An anonymous visitor owns records through a key tied to their browser for that artifact, the same at its stable URL and on its subdomain. Clearing site data, or switching browsers, loses access to their `own` records, and the key proves possession of that browser, not who the person is. Signing in ties records to the person, who appears to each artifact under a pseudonym of that artifact alone. Never use an `own` policy as authentication for anything beyond the visitor's own records.

@@ -4,7 +4,7 @@ description: "Use when building, publishing, updating, or fixing an interactive 
 license: "Apache-2.0"
 metadata:
   author: "Leeor Nahum"
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Artifac
@@ -27,7 +27,7 @@ Read [HTTP API and CLI](references/http-and-cli.md) before using either of those
 
 1. Call `list_workspaces` and pick one where `can_create_artifacts` is true. When the person has several and has not said which, ask: the workspace owns the artifact.
 2. Call `create_artifact` with `index.html` at the root and every other file the page needs, in one call.
-3. Give the person the returned `url`, and `site_url` when there is one.
+3. Give the person the returned `url`.
 
 Each `create_artifact` call makes another artifact. If one fails with `internal`, list the workspace's artifacts before trying again, since it may have landed.
 
@@ -35,11 +35,11 @@ A new artifact opens only for its workspace's members. Sharing, public or unlist
 
 ## Change Files
 
-Start with `read_artifact` and no `path`. It returns the artifact's capabilities, limits, and usage, and a manifest that gives each path its kind (`source`, `asset`, `data`, or `config`), revision, and what you may do to it (`read`, `replace`, `edit`, `delete`).
+Start with `read_artifact` and no `path`. It returns the artifact's URLs (when `site_url` is set, the artifact opens there, on its subdomain, instead of at `url`), capabilities, limits, and usage, and a manifest that gives each path its kind (`source`, `asset`, `data`, or `config`), revision, and what you may do to it (`read`, `replace`, `edit`, `delete`).
 
 - **Exact edits first.** `edit_artifact_file` replaces `old_string`, which must appear exactly once, in a text file's current content. It never overwrites someone else's change: if their change removed your text, the edit fails instead. Copy `old_string` from a fresh read, not from memory.
 - **Whole-file replacement needs a read.** `update_artifact` replaces an existing path only when your connection read it, or wrote it, at its current revision. `read_required` means read it, then send again. `conflict` means it changed since: read it again and reapply your change to the new content. Never resend the text you built from the old version.
-- **Read every page before rewriting a file.** Text reads come in pages of lines, and reading the first page already counts as a read. Follow `next_offset` until it is null before you replace a file whole, or the replacement drops what you did not read. A `cut_line` marks a line longer than one read returns, and the whole file is at `download_url`.
+- **Read every page before rewriting a file.** Text reads come in pages of lines, and reading the first page already counts as a read. Follow `next_offset` until it is null before you replace a file whole, or the replacement drops what you did not read. A `cut_line` marks a line longer than one read returns, and the whole file, saved data included, is at `download_url`.
 - **Sessions sharing one credential share one read receipt.** Every conversation one person has through the same connected app counts as the same reader, so a read made in another conversation lets this one replace a file whose newer content it never saw. Read a file again just before replacing it whole.
 - **One change per intent.** List every file of one change in a single `update_artifact` call. It applies all of them or none, keeps every file and saved record you leave out, and goes live at once: open pages reload on every accepted code change.
 - **Deleting.** `delete_artifact_files` takes exact paths. `index.html` cannot be deleted, so replace it instead. `delete_artifact` moves the whole artifact to Trash, so call it only when the person asked to delete the artifact itself.
@@ -67,7 +67,7 @@ Read [saved data](references/saved-data.md) before a page stores anything, befor
 
 ## Metadata
 
-Library cards and link previews take their metadata from the head of `index.html`, refreshed on every change. There is no metadata tool.
+The library, the browser tab, and link previews take their metadata from the head of `index.html`, refreshed on every change. There is no metadata tool.
 
 - `<title>` names the artifact, else `og:title`.
 - `<meta name="description">`, else `og:description`.
@@ -81,7 +81,7 @@ Put these tags at the top of the head. Only `index.html` is read for them.
 - Paths are relative, case-sensitive, and normalized: `/` separators, no leading slash, no `.` or `..` segment, no `?`, `#`, or backslash, and no segment ending in a dot or space.
 - `.artifac/` holds only `config.json` and `data/<collection>.json`, and is never served. `__artifac/` belongs to Artifac's own scripts. Neither can hold your files.
 - The artifact is served at its own root, so root-relative (`/js/app.js`) and relative URLs both work, at the stable URL and on a subdomain.
-- `/guide/` serves `guide/index.html`, and `/guide` tries `guide`, then `guide.html`, then `guide/index.html`. There is no fallback page and no custom 404, so a client-side router needs hash routing or one HTML file per route, as a static export produces.
+- `/guide/` serves `guide/index.html`. `/guide` serves `guide` or `guide.html` when one exists, and otherwise moves to `/guide/` when `guide/index.html` does, so relative links in a folder's page resolve inside the folder. There is no fallback page and no custom 404, so a client-side router needs hash routing or one HTML file per route, as a static export produces.
 - For framework output, send the build folder with the CLI.
 
 ## How The Page Runs
@@ -96,7 +96,7 @@ The artifact runs in a sandboxed frame on an origin of its own:
 
 ## Viewer Identity
 
-Artifact code never receives a person's account ID, name, or email. A signed-in viewer appears to an artifact under a pseudonym that is different in every artifact for the same person, and an anonymous visitor under a key derived from their browser and that artifact. Whichever applies owns the records they create there.
+Artifact code never receives a person's account ID, name, or email. A signed-in viewer appears to an artifact under a pseudonym that is different in every artifact for the same person, and an anonymous visitor under a key derived from their browser and that artifact, the same at its stable URL and on its subdomain. Whichever applies owns the records they create there.
 
 - Learn about the viewer through the SDK: `session()` says whether they are signed in, their role, and what they may do in each configured collection, and each record's `mine` flag says whether they created it. The data file shows the same `mine` flag, never an owner value.
 - Never build identity that spans artifacts, and never treat an anonymous visitor's ownership as proof of who they are.
